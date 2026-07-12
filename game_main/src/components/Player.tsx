@@ -1,5 +1,5 @@
-import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import type { Mesh } from "three";
 import { useKeyboardControls } from "@react-three/drei";
