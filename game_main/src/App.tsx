@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { KeyboardControls } from "@react-three/drei";
 import Player from "./components/Player";
 import Track from "./components/Track";
+import ObstacleManager from "./components/ObstacleManager";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <directionalLight position={[5, 12, 4]} intensity={1.2} />
         <Player />
         <Track />
+        <ObstacleManager />
       </Canvas>
     </KeyboardControls>
   );
