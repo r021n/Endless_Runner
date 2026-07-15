@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { Mesh } from "three";
 import { useFrame } from "@react-three/fiber";
+import { useGameStore } from "../store/useGameStore";
 
 function Track() {
   const trackRef = useRef<Mesh>(null);
@@ -8,6 +9,7 @@ function Track() {
 
   useFrame((_, delta) => {
     if (!trackRef.current) return;
+    if (useGameStore.getState().status !== "PLAYING") return;
     trackRef.current.position.z += speedRef.current * delta;
     if (trackRef.current.position.z > 10) {
       trackRef.current.position.z -= 150;

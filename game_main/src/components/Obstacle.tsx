@@ -13,12 +13,13 @@ function Obstacle({ id, position }: ObstacleProps) {
 
   useFrame((_, delta) => {
     if (!meshRef.current) return;
-    // gerakkan obstacle
-    meshRef.current.position.z += useGameStore.getState().speed * delta;
 
     // cek status game
     const status = useGameStore.getState().status;
     if (status !== "PLAYING") return;
+
+    // gerakkan obstacle
+    meshRef.current.position.z += useGameStore.getState().speed * delta;
 
     // deteksi tabrakan
     const playerPos = useGameStore.getState().playerPosition;
