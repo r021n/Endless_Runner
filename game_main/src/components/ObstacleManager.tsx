@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
 import { useGameStore } from "../store/useGameStore";
 import Obstacle from "./Obstacle";
 
@@ -35,16 +34,6 @@ function ObstacleManager() {
       }
     };
   }, [status]);
-
-  useFrame(() => {
-    const currentObstacles = useGameStore.getState().obstacles;
-    for (let i = 0; i < currentObstacles.length; i++) {
-      if (currentObstacles[i].position[2] > 15) {
-        useGameStore.getState().removeObstacle(currentObstacles[i].id);
-        break;
-      }
-    }
-  });
 
   return (
     <>

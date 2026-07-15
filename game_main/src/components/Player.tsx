@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import type { Mesh } from "three";
 import { useKeyboardControls } from "@react-three/drei";
+import { useGameStore } from "../store/useGameStore";
 
 function Player() {
   const playerRef = useRef<Mesh>(null);
@@ -26,6 +27,13 @@ function Player() {
 
   useFrame((_, delta) => {
     if (!playerRef.current) return;
+    useGameStore
+      .getState()
+      .setPlayerPosition([
+        playerRef.current.position.x,
+        playerRef.current.position.y,
+        playerRef.current.position.z,
+      ]);
     playerRef.current.position.x = THREE.MathUtils.lerp(
       playerRef.current.position.x,
       targetRef.current,

@@ -77,12 +77,13 @@
 
 ### Chapter 7: Simulasi Gerak Maju (Track Scrolling Loop)
 
-- **Tujuan Utama:** Membuat ilusi jalan terus berjalan ke belakang tanpa batas secara mulus.
+- **Tujuan Utama:** Membuat ilusi jalan terus berjalan ke belakang tanpa batas secara mulus, dan berhenti saat game berakhir.
 - **Detail Mekanisme:** `useFrame` pada komponen Track.
 - **Langkah Logika:**
-  1.  Di `Track.jsx`, di dalam loop `useFrame`, tambahkan posisi Z track secara konstan ke arah positif (mundur mendekati kamera): `trackRef.current.position.z += speed * delta`.
-  2.  Jika nilai `trackRef.current.position.z > 10` (sudah melewati kamera), kurangi posisinya kembali ke belakang sejauh satu siklus penuh untuk menciptakan efek _seamless loop_.
-- **Kriteria Selesai (DoD):** Jalanan meluncur ke belakang menciptakan ilusi visual Player berlari maju tanpa henti secara konstan.
+  1.  Di `Track.jsx`, di dalam loop `useFrame`, cek status game terlebih dahulu: `if (useGameStore.getState().status !== "PLAYING") return;`. Jika bukan `PLAYING`, jangan gerakkan lintasan.
+  2.  Tambahkan posisi Z track secara konstan ke arah positif (mundur mendekati kamera): `trackRef.current.position.z += speed * delta`.
+  3.  Jika nilai `trackRef.current.position.z > 10` (sudah melewati kamera), kurangi posisinya kembali ke belakang sejauh satu siklus penuh untuk menciptakan efek _seamless loop_.
+- **Kriteria Selesai (DoD):** Jalanan meluncur ke belakang menciptakan ilusi visual Player berlari maju tanpa henti secara konstan. Saat game berakhir (`GAMEOVER`), lintasan berhenti bergerak seketika.
 
 ---
 
@@ -101,37 +102,41 @@
 
 ### Chapter 9: Komponen Rintangan Tunggal (Obstacle Mesh Script)
 
-- **Tujuan Utama:** Membuat rintangan yang bergerak mundur berdasarkan global game speed.
+- **Tujuan Utama:** Membuat rintangan yang bergerak mundur, mendeteksi tabrakan dengan player, dan menghapus diri sendiri saat keluar layar.
 - **Detail Komponen:** Komponen `<mesh>`, `<boxGeometry>` warna jingga, di-render berdasarkan props koordinat.
 - **Langkah Logika:**
   1.  Buat `/src/components/Obstacle.jsx` yang menerima prop `id`, `position` `[x, y, z]`.
-  2.  Di dalam `useFrame`, update posisi Z objek ini secara independen ke arah positif menggunakan data kecepatan non-reaktif: `meshRef.current.position.z += useGameStore.getState().speed * delta`.
-- **Kriteria Selesai (DoD):** Komponen rintangan jingga sukses muncul di koordinat spesifik dan bergerak lurus mundur melewati player.
+  2.  Di dalam `useFrame`:
+      1. Update posisi Z mesh secara independen ke arah positif: `meshRef.current.position.z += useGameStore.getState().speed * delta`.
+      2. Baca status game: jika bukan `PLAYING`, keluar dari fungsi.
+      3. Baca posisi player dari store (`useGameStore.getState().playerPosition`). Bandingkan dengan `meshRef.current.position` (posisi aktual mesh, bukan posisi awal di store). Jika `Math.abs(player.x - obs.x) < 0.8` DAN `Math.abs(player.z - obs.z) < 0.8`, picu `useGameStore.getState().endGame()`.
+      4. Garbage collector: jika `meshRef.current.position.z > 15`, hapus obstacle dari store: `useGameStore.getState().removeObstacle(id)`.
+- **Kriteria Selesai (DoD):** Komponen rintangan jingga sukses muncul di koordinat spesifik, bergerak mundur, mendeteksi tabrakan dengan player, dan menghapus diri sendiri saat keluar layar.
 
-### Chapter 10: Pembuat Rintangan Otomatis & Pembersihan Memori (Spawner & Garbage Collector)
+### Chapter 10: Pembuat Rintangan Otomatis (Spawner)
 
-- **Tujuan Utama:** Spawning rintangan secara berkala di jalur acak dan menghapusnya saat keluar layar.
+- **Tujuan Utama:** Spawning rintangan secara berkala di jalur acak.
 - **Detail Komponen:** Komponen `/src/components/ObstacleManager.jsx`.
 - **Langkah Logika:**
   1.  Gunakan `useEffect` yang diatur dengan pewaktu interval (misal tiap 1.5 detik) ketika `status === 'PLAYING'`.
   2.  Setiap tick interval, panggil `addObstacle()` dengan data: `id: Math.random()`, posisi: `[X acak (-2, 0, atau 2), 0.5, -80]`.
   3.  Lakukan mapping array `obstacles` dari store ke komponen `<Obstacle />`.
-  4.  **Garbage Collector:** Di dalam `useFrame`, jika ada rintangan yang koordinat Z-nya `> 15`, jalankan filter aksi di store untuk menghapusnya dari array memory.
-- **Kriteria Selesai (DoD):** Rintangan terus bermunculan secara acak dan memori browser tetap stabil (elemen DOM/Mesh terhapus otomatis setelah melewati kamera).
+- **Catatan:** Garbage collector (penghapusan obstacle yang keluar layar) dan deteksi tabrakan sudah ditangani di dalam komponen `Obstacle.tsx` (lihat Chapter 9), sehingga `ObstacleManager` hanya bertugas sebagai spawner dan renderer.
+- **Kriteria Selesai (DoD):** Rintangan terus bermunculan secara acak saat game berstatus `PLAYING`.
 
 ---
 
 ## BAGIAN 4: VALIDASI TABRAKAN & INTERFACE OVERLAY
 
-### Chapter 11: Deteksi Tabrakan Real-time (AABB Collision Matrix)
+### Chapter 11: Integrasi Player Position ke Store
 
-- **Tujuan Utama:** Mengalkulasi benturan dimensi kubus Player dengan Rintangan pada setiap frame tunggal.
-- **Detail Mekanisme:** Rumus Jarak Absolut Sumbu di dalam `useFrame` milik `ObstacleManager`.
+- **Tujuan Utama:** Menyimpan posisi Player ke Zustand store agar komponen `Obstacle` dapat mengaksesnya untuk deteksi tabrakan.
+- **Detail Mekanisme:** `setPlayerPosition` di dalam `useFrame` milik `Player.tsx`, pembacaan via `useGameStore.getState().playerPosition` di dalam `useFrame` milik `Obstacle.tsx`.
 - **Langkah Logika:**
-  1.  Di dalam loop `useFrame` manager, dapatkan posisi X dan Z dari Player secara realtime via referensi atau store.
-  2.  Lakukan perulangan cek pada array rintangan yang aktif.
-  3.  Jika `Math.abs(player.x - obs.x) < 0.8` AND `Math.abs(player.z - obs.z) < 0.8`, picu `useGameStore.getState().endGame()`.
-- **Kriteria Selesai (DoD):** Menyentuh kotak jingga langsung mengubah status game menjadi 'GAMEOVER' dan menghentikan seluruh pergerakan dunia 3D seketika.
+  1.  Tambahkan field `playerPosition: [number, number, number]` dan action `setPlayerPosition` di store Zustand.
+  2.  Di dalam `useFrame` milik `Player.tsx`, simpan posisi aktual player ke store: `useGameStore.getState().setPlayerPosition([playerRef.current.position.x, playerRef.current.position.y, playerRef.current.position.z])`.
+  3.  Deteksi tabrakan sudah ada di `Obstacle.tsx` (Chapter 9). Pastikan logika di `Obstacle.tsx` membaca `playerPosition` dari store secara non-reaktif.
+- **Kriteria Selesai (DoD):** Posisi player tersimpan di store setiap frame. Saat player menyentuh rintangan, status game berubah menjadi `GAMEOVER` dan seluruh pergerakan dunia 3D berhenti seketika.
 
 ### Chapter 12: Integrasi UI HTML Overlay & Zustand Selector v5
 

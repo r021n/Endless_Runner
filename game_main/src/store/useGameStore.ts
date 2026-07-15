@@ -5,6 +5,7 @@ interface GameState {
   score: number;
   speed: number;
   obstacles: { id: number; position: [number, number, number] }[];
+  playerPosition: [number, number, number];
   startGame: () => void;
   endGame: () => void;
   resetGame: () => void;
@@ -13,13 +14,15 @@ interface GameState {
     position: [number, number, number];
   }) => void;
   removeObstacle: (id: number) => void;
+  setPlayerPosition: (pos: [number, number, number]) => void;
 }
 
 export const useGameStore = create<GameState>()((set) => ({
-  status: "START",
+  status: "PLAYING",
   score: 0,
   speed: 15,
   obstacles: [],
+  playerPosition: [0, 0.5, 0],
   startGame: () =>
     set({
       status: "PLAYING",
@@ -34,4 +37,5 @@ export const useGameStore = create<GameState>()((set) => ({
     set((state) => ({
       obstacles: state.obstacles.filter((obs) => obs.id !== id),
     })),
+  setPlayerPosition: (pos) => set({ playerPosition: pos }),
 }));
