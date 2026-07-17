@@ -5,12 +5,11 @@ import { useGameStore } from "../store/useGameStore";
 
 function Track() {
   const trackRef = useRef<Mesh>(null);
-  const speedRef = useRef(15);
 
   useFrame((_, delta) => {
     if (!trackRef.current) return;
     if (useGameStore.getState().status !== "PLAYING") return;
-    trackRef.current.position.z += speedRef.current * delta;
+    trackRef.current.position.z += useGameStore.getState().speed * delta;
     if (trackRef.current.position.z > 10) {
       trackRef.current.position.z -= 150;
     }

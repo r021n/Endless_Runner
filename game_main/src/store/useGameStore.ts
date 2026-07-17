@@ -18,7 +18,7 @@ interface GameState {
 }
 
 export const useGameStore = create<GameState>()((set) => ({
-  status: "PLAYING",
+  status: "START",
   score: 0,
   speed: 15,
   obstacles: [],

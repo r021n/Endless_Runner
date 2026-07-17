@@ -27,7 +27,6 @@ function Obstacle({ id, position }: ObstacleProps) {
     const distanceZ = Math.abs(playerPos[2] - meshRef.current.position.z);
 
     if (distanceX < 0.8 && distanceZ < 0.8) {
-      console.log("terdeteksi tabrakan");
       useGameStore.getState().endGame();
       return;
     }

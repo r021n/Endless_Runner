@@ -1,12 +1,17 @@
 import { useEffect, useRef } from "react";
 import { useGameStore } from "../store/useGameStore";
+import { useShallow } from "zustand/shallow";
 import Obstacle from "./Obstacle";
 
 function ObstacleManager() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const status = useGameStore((state) => state.status);
-  const obstacles = useGameStore((state) => state.obstacles);
+  const { status, obstacles } = useGameStore(
+    useShallow((state) => ({
+      status: state.status,
+      obstacles: state.obstacles,
+    })),
+  );
 
   useEffect(() => {
     if (status !== "PLAYING") {
