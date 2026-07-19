@@ -3,6 +3,7 @@ import { KeyboardControls } from "@react-three/drei";
 import Player from "./components/Player";
 import Track from "./components/Track";
 import ObstacleManager from "./components/ObstacleManager";
+import GameUI from "./components/GameUI";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Track />
         <ObstacleManager />
       </Canvas>
+      <GameUI />
     </KeyboardControls>
   );
 }

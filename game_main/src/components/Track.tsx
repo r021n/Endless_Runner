@@ -10,6 +10,7 @@ function Track() {
     if (!trackRef.current) return;
     if (useGameStore.getState().status !== "PLAYING") return;
     trackRef.current.position.z += useGameStore.getState().speed * delta;
+    useGameStore.setState((state) => ({ score: state.score + 1 }));
     if (trackRef.current.position.z > 10) {
       trackRef.current.position.z -= 150;
     }
