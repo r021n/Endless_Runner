@@ -27,6 +27,11 @@ function Player() {
 
   useFrame((_, delta) => {
     if (!playerRef.current) return;
+    playerRef.current.position.x = THREE.MathUtils.lerp(
+      playerRef.current.position.x,
+      targetRef.current,
+      delta * 10,
+    );
     useGameStore
       .getState()
       .setPlayerPosition([
@@ -34,11 +39,6 @@ function Player() {
         playerRef.current.position.y,
         playerRef.current.position.z,
       ]);
-    playerRef.current.position.x = THREE.MathUtils.lerp(
-      playerRef.current.position.x,
-      targetRef.current,
-      delta * 10,
-    );
   });
 
   return (

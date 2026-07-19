@@ -17,13 +17,13 @@ function Track() {
       useGameStore.setState((state) => ({ score: state.score + 1 }));
     }
     if (trackRef.current.position.z > 10) {
-      trackRef.current.position.z -= 150;
+      trackRef.current.position.z -= 120;
     }
   });
 
   return (
     <mesh ref={trackRef} position={[0, -0.1, -50]} receiveShadow>
-      <boxGeometry args={[6, 0.2, 150]} />
+      <boxGeometry args={[6, 0.2, 120]} />
       <meshStandardMaterial color="#444444" roughness={0.9} />
     </mesh>
   );

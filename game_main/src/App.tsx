@@ -14,6 +14,8 @@ function App() {
       ]}
     >
       <Canvas shadows camera={{ position: [0, 4, 8], fov: 55 }}>
+        <color attach="background" args={["#202025"]} />
+        <fog attach="fog" args={["#202025", 20, 90]} />
         <ambientLight intensity={0.6} />
         <directionalLight
           position={[5, 12, 4]}
