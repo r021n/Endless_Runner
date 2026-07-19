@@ -11,9 +11,22 @@ function Player() {
   const [subscribeKeys] = useKeyboardControls();
 
   useEffect(() => {
+    const unsubscribe = useGameStore.subscribe((state, prevState) => {
+      if (state.status === "PLAYING" && prevState.status !== "PLAYING") {
+        targetRef.current = 0;
+        if (playerRef.current) {
+          playerRef.current.position.set(0, 0.5, 0);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = subscribeKeys(
       (state) => state,
       (pressed) => {
+        if (useGameStore.getState().status !== "PLAYING") return;
         if (pressed.left) {
           targetRef.current = Math.max(targetRef.current - 2, -2);
         }
@@ -27,6 +40,7 @@ function Player() {
 
   useFrame((_, delta) => {
     if (!playerRef.current) return;
+    if (useGameStore.getState().status !== "PLAYING") return;
     playerRef.current.position.x = THREE.MathUtils.lerp(
       playerRef.current.position.x,
       targetRef.current,

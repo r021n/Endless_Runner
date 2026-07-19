@@ -28,9 +28,16 @@ export const useGameStore = create<GameState>()((set) => ({
       status: "PLAYING",
       score: 0,
       obstacles: [],
+      playerPosition: [0, 0.5, 0],
     }),
   endGame: () => set({ status: "GAMEOVER" }),
-  resetGame: () => set({ status: "START" }),
+  resetGame: () =>
+    set({
+      status: "START",
+      obstacles: [],
+      score: 0,
+      playerPosition: [0, 0.5, 0],
+    }),
   addObstacle: (obs) =>
     set((state) => ({ obstacles: [...state.obstacles, obs] })),
   removeObstacle: (id) =>
