@@ -19,12 +19,12 @@ function Track() {
     trackRef1.current.position.z += speed * delta;
     trackRef2.current.position.z += speed * delta;
 
-    if (trackRef1.current.position.z > 10) {
+    if (trackRef1.current.position.z > 65) {
       trackRef1.current.position.z =
         trackRef2.current.position.z - TRACK_LENGTH;
     }
 
-    if (trackRef2.current.position.z > 10) {
+    if (trackRef2.current.position.z > 65) {
       trackRef2.current.position.z =
         trackRef1.current.position.z - TRACK_LENGTH;
     }
