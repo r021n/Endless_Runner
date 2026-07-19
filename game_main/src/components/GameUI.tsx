@@ -97,9 +97,36 @@ function GameUI() {
             height: "100%",
             color: "white",
             pointerEvents: "auto",
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
           }}
-        ></div>
+        >
+          <h1
+            style={{ fontSize: "3rem", marginBottom: "1rem", color: "ff4444" }}
+          >
+            GAME OVER
+          </h1>
+          <p style={{ fontSize: "2rem", marginBottom: "2rem" }}>
+            Score: {score}
+          </p>
+          <button
+            onClick={handleRestart}
+            style={{
+              padding: "15px 40px",
+              fontSize: "1.5rem",
+              backgroundColor: "#44aa44",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              pointerEvents: "auto",
+            }}
+          >
+            MAIN LAGI
+          </button>
+        </div>
       )}
     </div>
   );
 }
+
+export default GameUI;
