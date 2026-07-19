@@ -8,7 +8,7 @@ import { useGameStore } from "../store/useGameStore";
 function Player() {
   const playerRef = useRef<Mesh>(null);
   const targetRef = useRef(0);
-  const [subscribeKeys, getKeys] = useKeyboardControls();
+  const [subscribeKeys] = useKeyboardControls();
 
   useEffect(() => {
     const unsubscribe = subscribeKeys(

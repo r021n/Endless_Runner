@@ -101,7 +101,7 @@ function GameUI() {
           }}
         >
           <h1
-            style={{ fontSize: "3rem", marginBottom: "1rem", color: "ff4444" }}
+            style={{ fontSize: "3rem", marginBottom: "1rem", color: "#ff4444" }}
           >
             GAME OVER
           </h1>
