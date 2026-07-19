@@ -38,7 +38,7 @@ function Obstacle({ id, position }: ObstacleProps) {
   });
 
   return (
-    <mesh ref={meshRef} position={position}>
+    <mesh ref={meshRef} position={position} castShadow>
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color="orange" />
     </mesh>

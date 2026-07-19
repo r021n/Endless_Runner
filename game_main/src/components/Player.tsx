@@ -42,7 +42,7 @@ function Player() {
   });
 
   return (
-    <mesh ref={playerRef} position={[0, 0.5, 0]}>
+    <mesh ref={playerRef} position={[0, 0.5, 0]} castShadow>
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color="red" />
     </mesh>

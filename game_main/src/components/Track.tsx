@@ -22,7 +22,7 @@ function Track() {
   });
 
   return (
-    <mesh ref={trackRef} position={[0, -0.1, -50]}>
+    <mesh ref={trackRef} position={[0, -0.1, -50]} receiveShadow>
       <boxGeometry args={[6, 0.2, 150]} />
       <meshStandardMaterial color="#444444" roughness={0.9} />
     </mesh>

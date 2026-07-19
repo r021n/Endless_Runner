@@ -13,9 +13,22 @@ function App() {
         { name: "right", keys: ["ArrowRight", "KeyD"] },
       ]}
     >
-      <Canvas camera={{ position: [0, 4, 8], fov: 55 }}>
+      <Canvas shadows camera={{ position: [0, 4, 8], fov: 55 }}>
         <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 12, 4]} intensity={1.2} />
+        <directionalLight
+          position={[5, 12, 4]}
+          intensity={1.2}
+          castShadow
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+          shadow-camera-left={-10}
+          shadow-camera-right={10}
+          shadow-camera-top={20}
+          shadow-camera-bottom={-100}
+          shadow-camera-near={0.5}
+          shadow-camera-far={50}
+          shadow-bias={-0.0005}
+        />
         <Player />
         <Track />
         <ObstacleManager />
